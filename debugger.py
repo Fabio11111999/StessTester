@@ -1,5 +1,6 @@
 import subprocess
 import random
+import time
 subprocess.run("clear")
 
 class bcolors:
@@ -82,11 +83,14 @@ for t in range (1, T + 1):
 	file_input.close()
 		
 	#Run Correct Solution
+	start_correct_time = time.time()
 	correct_execution = subprocess.run(
 		"./correct",
 		input = gen_execution.stdout.decode(),
 		capture_output = True,
 		text = True)
+	end_correct_time = time.time()
+	correct_time = round(end_correct_time-start_correct_time, 3)
 	if correct_execution.returncode != 0:
 		print("Correct soltuion's execution failed :\n", correct_execution.stderr)
 	file_output_correct = open("files/correct_output.txt", "w+")
@@ -94,11 +98,14 @@ for t in range (1, T + 1):
 	file_output_correct.close()
 	
 	#Run Wrong Solution
+	start_wrong_time = time.time()
 	wrong_execution = subprocess.run(
 		"./wrong",
 		input = gen_execution.stdout.decode(),
 		capture_output = True,
 		text = True)
+	end_wrong_time = time.time();
+	wrong_time = round(end_wrong_time-start_wrong_time, 3)
 	if wrong_execution.returncode != 0:
 		print("Wrong soltuion's execution failed :\n", wrong_execution.stderr)
 	file_output_wrong = open("files/wrong_output.txt", "w+")
@@ -113,7 +120,9 @@ for t in range (1, T + 1):
 		subprocess.run(["unlink", "gen"])
 		subprocess.run(["unlink", "check"])
 		exit(0)
-	print(bcolors.BOLD + "Testcase " + str(t) + ": " + bcolors.ENDC + bcolors.OKBLUE + "Correct Output." + bcolors.ENDC, flush = True)
+	print(bcolors.BOLD + "Testcase " + str(t) + ": " + bcolors.ENDC + bcolors.OKBLUE + "\tCorrect Output." + bcolors.ENDC + 
+				"\t\tExecution Time: " + bcolors.OKGREEN + "correct.cpp: " +bcolors.ENDC + str(correct_time) + "s\t" + bcolors.FAIL
+				+ "wrong.cpp: " + bcolors.ENDC + str(wrong_time) + "s\n", flush = True)
 	
 # #Remove unnecessary files
 subprocess.run(["unlink", "correct"])
