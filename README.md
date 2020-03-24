@@ -17,7 +17,7 @@ In the folder are present several required files:
 - ```correct.cpp```: this is the "correct solution" that means that this cpp needs to print on `stdout` the correct output for the input that is read from `stdin`.
 - ```wrong.cpp```: this is the "wrong solution", the one where you want to find a corner case. The file needs to read from ```stdin``` and write on ```stdout```.
 - ```generator.cpp```: a file that takes a seed as its only argument and uses that seed for generating random values. The generated input will be written on ```stdout```.
-- ```checker.cpp```: this file is the one that determines whether the output created by ```wrong.cpp``` is valid. When ```cheker.cpp``` is run in the folder will be present ```correct_output.txt``` and ```wrong_output.txt```: the outputs created by ```correct.cp``` and ```wrong.cpp```. If ```wrong_output.txt``` is considered correct then ```checker.cpp``` will return 0, otherwise a different value.  
+- ```checker.cpp```: this file is the one that determines whether the output created by ```wrong.cpp``` is valid. When ```cheker.cpp``` is run in the folder will be present ```correct_output.txt``` and ```wrong_output.txt```: the outputs created by ```correct.cpp``` and ```wrong.cpp```. If ```wrong_output.txt``` is considered correct then ```checker.cpp``` will return 0, otherwise a different value.  
 
 
 ### WorkFlow:
