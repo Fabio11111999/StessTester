@@ -1,8 +1,8 @@
 # StressTester
 
-This is a tool developed to debug and  to find corner cases in a specific C++ file stress testing it. All the files apart from ```debugger.py``` (the provid one) needs to be C++ files.
+This is a tool developed to debug and  to find corner cases in a specific C++ file stress testing it. All the files apart from ```debugger.py``` (the provided one) needs to be C++ files.
 
-Stress testing a solution means making a certain amount fo differents tests and checking if one of them produced an output considered wrong. 
+Stress testing a solution means making a certain amount of different tests and checking if one of them produced an output considered wrong. 
 If the code tested produced a wrong output then the input, the output and the correct output are stored in the folder. 
 
 ## Requirements
