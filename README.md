@@ -25,9 +25,9 @@ During the all execution of ```debugger.py``` if a return code different from 0 
 - ```generator.cpp```, ```correct.cpp``` and ```wrong.cpp``` are compiled.
 - Several testcases are generated:
   - A random seed ```S``` is generated.
-  - ```generator.cpp``` is executed taking ```S``` as argument, the input is redirected to ```input.txt```.
-  - ```correct.cpp``` is executed redirecting ```input.txt``` as its ```stdin``` and is output (```stdout```) is redirected to ```correct_output.txt```.
-   - ```wrong.cpp``` is executed redirecting ```input.txt``` as its ```stdin``` and is output (```stdout```) is redirected to ```wrong_output.txt```.
+  - ```generator.cpp``` is executed taking ```S``` as argument, the input is redirected to ```files/input.txt```.
+  - ```correct.cpp``` is executed redirecting ```files/input.txt``` as its ```stdin``` and is output (```stdout```) is redirected to ```files/correct_output.txt```.
+   - ```wrong.cpp``` is executed redirecting ```files/input.txt``` as its ```stdin``` and is output (```stdout```) is redirected to ```files/wrong_output.txt```.
    - ```checker.cpp``` is executed, and if its return code is:
      - ```0``` then ```wrong.cpp``` produced a correct output for the current testcase.
      - different from `0` then the execution of ```debugger.py``` is interrupted and ```input.txt```, ```correct_output.txt``` and ```wrong_output.txt``` are kept in the folder.  
