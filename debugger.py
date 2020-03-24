@@ -73,7 +73,7 @@ for t in range (1, T + 1):
 	#TestCase:
 	#Run Generator
 	seed = random.randint(1,1000000000)
-	gen_execution = subprocess.run(["./gen", str(seed)], capture_output = True, text = True)
+	gen_execution = subprocess.run(["./gen", str(seed)], capture_output = True)
 	if gen_execution.returncode != 0:
 		print("Generator's execution failed: \n", gen_execution.stderr)
 		exit(1)
