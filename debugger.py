@@ -2,7 +2,7 @@ import subprocess
 import random
 import time
 import os
-subprocess.run("clear")
+os.system('cls' if os.name == 'nt' else 'clear')
 class bcolors:
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
@@ -54,6 +54,7 @@ for t in range (1, T + 1):
 		 stdout = open("files/input.txt", "w+"))
 	if gen_execution.returncode != 0:
 		exit(1)
+		remove_files(["correct", "wrong", "gen", "check"])
 	
 	#Run Correct Solution
 	start_clock = time.time()
@@ -65,18 +66,25 @@ for t in range (1, T + 1):
 	get_clock = time.time()
 	correct_time = round(get_clock-start_clock, 3)
 	if correct_execution.returncode != 0:
-			exit(1)
+		remove_files(["correct", "wrong", "gen", "check"])
+		exit(1)
 	#Run Wrong Solution
 	start_clock = time.time()
-	wrong_execution = subprocess.run(
-		"./wrong",
-		stdin = open("files/input.txt", "r"),
-		stdout = open("files/wrong_output.txt", "w+"),
-		text = True,
-		timeout = time_limit)
-	get_clock = time.time()
-	wrong_time = round(get_clock-start_clock, 3)
-	if wrong_execution.returncode != 0:
+	try:
+		wrong_execution = subprocess.run(
+			"./wrong",
+			stdin = open("files/input.txt", "r"),
+			stdout = open("files/wrong_output.txt", "w+"),
+			text = True,
+			timeout = time_limit)
+		get_clock = time.time()
+		wrong_time = round(get_clock-start_clock, 3)
+		if wrong_execution.returncode != 0:
+			remove_files(["correct", "wrong", "gen", "check"])
+			exit(1)
+	except subprocess.TimeoutExpired:
+		print(bcolors.BOLD + "Testcase " + str(t) + ": " + bcolors.ENDC + bcolors.FAIL +  "wrong.cpp exceeded the time limit of " + str(time_limit) + "s" +bcolors.ENDC, flush = True)
+		remove_files(["correct", "wrong", "gen", "check"])
 		exit(1)
 	#Run Checker
 	check_execution = subprocess.run("./check")
