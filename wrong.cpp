@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 int main(){
+	int a=1/0;
 	int N;
 	cin>>N;
 	vector<int> v(N);

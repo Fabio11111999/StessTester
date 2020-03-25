@@ -9,7 +9,6 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
 
-#prova funzinoe di compilazione
 def compile_cpp(cpp, binary, safe=False):
 	compilation_process = 1
 	print("Compiling "  + cpp + ":", end=" ", flush=True)
@@ -38,51 +37,40 @@ wrong_compile = compile_cpp("wrong.cpp", "wrong", True)
 print("\n\n", flush = True)
 T = int(input("Enter the number of testcases: "))
 print("\n\n", flush = True)
-time_limit = int(input("Enter a Time Limit for wrong.cpp (in seconds): "))
+time_limit = float(input("Enter a Time Limit for wrong.cpp (in seconds): "))
 print("\n\n", flush = True)
 
 for t in range (1, T + 1):
 	#TestCase:
 	#Run Generator
 	seed = random.randint(1,1000000000)
-	gen_execution = subprocess.run(["./gen", str(seed)], capture_output = True)
+	gen_execution = subprocess.run(["./gen", str(seed)], stdout = open("files/input.txt", "w+"))
 	if gen_execution.returncode != 0:
-		print("Generator's execution failed: \n", gen_execution.stderr)
 		exit(1)
-	file_input = open("files/input.txt", "w+")
-	file_input.write(gen_execution.stdout.decode())
-	file_input.close()
-		
+	
 	#Run Correct Solution
 	start_correct_time = time.time()
 	correct_execution = subprocess.run(
 		"./correct",
-		input = gen_execution.stdout.decode(),
-		capture_output = True,
+		stdin = open("files/input.txt", "r"),
+		stdout = open("files/correct_output.txt", "w+"),
 		text = True)
 	end_correct_time = time.time()
 	correct_time = round(end_correct_time-start_correct_time, 3)
 	if correct_execution.returncode != 0:
-		print("Correct soltuion's execution failed :\n", correct_execution.stderr)
-	file_output_correct = open("files/correct_output.txt", "w+")
-	file_output_correct.write(correct_execution.stdout)
-	file_output_correct.close()
-	
+			exit(1)
 	#Run Wrong Solution
 	start_wrong_time = time.time()
 	wrong_execution = subprocess.run(
 		"./wrong",
-		input = gen_execution.stdout.decode(),
-		capture_output = True,
+		stdin = open("files/input.txt", "r"),
+		stdout = open("files/wrong_output.txt", "w+"),
 		text = True,
 		timeout = time_limit)
 	end_wrong_time = time.time();
 	wrong_time = round(end_wrong_time-start_wrong_time, 3)
 	if wrong_execution.returncode != 0:
-		print("Wrong soltuion's execution failed :\n", wrong_execution.stderr)
-	file_output_wrong = open("files/wrong_output.txt", "w+")
-	file_output_wrong.write(wrong_execution.stdout)
-	file_output_wrong.close()
+		exit(1)
 	#Run Checker
 	check_execution = subprocess.run("./check")
 	if check_execution.returncode != 0:
