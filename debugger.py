@@ -1,6 +1,7 @@
 import subprocess
 import random
 import time
+import os
 subprocess.run("clear")
 class bcolors:
     OKBLUE = '\033[94m'
@@ -28,6 +29,10 @@ def compile_cpp(cpp, binary, safe=False):
 	print(' '*(15-len(cpp)), bcolors.OKGREEN + "\tComiplation completed \n" + bcolors.ENDC, flush=True)
 	return compilation_process
 
+def remove_files(files):
+	for s in files:
+		os.remove(s)
+
 gen_compile = compile_cpp("generator.cpp", "gen", False)
 check_compile = compile_cpp("checker.cpp", "check", False)
 correct_compile = compile_cpp("correct.cpp", "correct", True)
@@ -44,47 +49,44 @@ for t in range (1, T + 1):
 	#TestCase:
 	#Run Generator
 	seed = random.randint(1,1000000000)
-	gen_execution = subprocess.run(["./gen", str(seed)], stdout = open("files/input.txt", "w+"))
+	gen_execution = subprocess.run(
+		["./gen", str(seed)],
+		 stdout = open("files/input.txt", "w+"))
 	if gen_execution.returncode != 0:
 		exit(1)
 	
 	#Run Correct Solution
-	start_correct_time = time.time()
+	start_clock = time.time()
 	correct_execution = subprocess.run(
 		"./correct",
 		stdin = open("files/input.txt", "r"),
 		stdout = open("files/correct_output.txt", "w+"),
 		text = True)
-	end_correct_time = time.time()
-	correct_time = round(end_correct_time-start_correct_time, 3)
+	get_clock = time.time()
+	correct_time = round(get_clock-start_clock, 3)
 	if correct_execution.returncode != 0:
 			exit(1)
 	#Run Wrong Solution
-	start_wrong_time = time.time()
+	start_clock = time.time()
 	wrong_execution = subprocess.run(
 		"./wrong",
 		stdin = open("files/input.txt", "r"),
 		stdout = open("files/wrong_output.txt", "w+"),
 		text = True,
 		timeout = time_limit)
-	end_wrong_time = time.time();
-	wrong_time = round(end_wrong_time-start_wrong_time, 3)
+	get_clock = time.time()
+	wrong_time = round(get_clock-start_clock, 3)
 	if wrong_execution.returncode != 0:
 		exit(1)
 	#Run Checker
 	check_execution = subprocess.run("./check")
 	if check_execution.returncode != 0:
 		print(bcolors.BOLD + "Testcase " + str(t) + ": " + bcolors.ENDC + bcolors.FAIL + "Wrong Output." + bcolors.ENDC, flush = True)
-		subprocess.run(["unlink", "correct"])
-		subprocess.run(["unlink", "wrong"])
-		subprocess.run(["unlink", "gen"])
-		subprocess.run(["unlink", "check"])
+		remove_files(["correct", "wrong", "gen", "check"])
 		exit(0)
 	print(bcolors.BOLD + "Testcase " + str(t) + ": " + bcolors.ENDC + bcolors.OKBLUE + "\tCorrect Output." + bcolors.ENDC + 
 				"\t\tExecution Time: " + bcolors.OKGREEN + "correct.cpp: " +bcolors.ENDC + str(correct_time) + "s\t" + bcolors.FAIL
-				+ "wrong.cpp: " + bcolors.ENDC + str(wrong_time) + "s\n", flush = True)
+				+ "wrong.cpp: " + bcolors.ENDC + str(wrong_time) + "s\t seed: " + str(seed) +"\n", flush = True)
 	
 # #Remove unnecessary files
-subprocess.run(["unlink", "correct"])
-subprocess.run(["unlink", "wrong"])
-subprocess.run(["unlink", "gen"])
+remove_files(["correct", "wrong", "gen", "check", "files/input.txt", "files/correct_output.txt", "files/wrong_output.txt"])
