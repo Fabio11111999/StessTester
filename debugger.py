@@ -2,66 +2,37 @@ import subprocess
 import random
 import time
 subprocess.run("clear")
-
 class bcolors:
-    HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
-#Compile Generator:
-gen_compile = subprocess.run(
-	["g++", "-o", "gen", "generator.cpp"],
-	capture_output = True,
-	text = True)
-if gen_compile.returncode != 0:
-	print(bcolors.FAIL + "Generator's compilation failed: \n" + bcolors.ENDC, gen_compile.stderr)
-	exit(1)
-print(bcolors.OKGREEN + "Successfully Compiled generator.cpp" + bcolors.ENDC, flush = True)
+#prova funzinoe di compilazione
+def compile_cpp(cpp, binary, safe=False):
+	compilation_process = 1
+	print("Compiling "  + cpp + ":", end=" ", flush=True)
+	if safe:
+		compilation_process = subprocess.run(
+			["g++",	"-std=c++17",	"-Wshadow",	"-Wall", "-o",	binary, cpp, "-g", "-fsanitize=address", "-fsanitize=undefined",	"-D_GLIBCXX_DEBUG"],
+			capture_output = True,
+			text = True)
+	else:
+		compilation_process = subprocess.run(
+			["g++", "-o", binary, cpp],
+			capture_output = True,
+			text = True)
+	if compilation_process.returncode != 0:
+		print(bcolors.FAIL + "\tCompilation failed. \n" + bcolors.ENDC, compilation_process.stderr)
+		exit(1)
+	print(' '*(15-len(cpp)), bcolors.OKGREEN + "\tComiplation completed \n" + bcolors.ENDC, flush=True)
+	return compilation_process
 
-#Compile checket
-check_compile = subprocess.run(
-	["g++", "-o", "check", "checker.cpp"],
-	capture_output = True,
-	text = True)
-if check_compile.returncode != 0:
-	print(bcolors.FAIL + "Checker's compilation failed: \n" + bcolors.ENDC, check_compile.stderr)
-	exit(1)
-print(bcolors.OKGREEN + "Successfully Compiled checker.cpp" + bcolors.ENDC, flush = True)
-
-#Compile Correct Solution:
-correct_compile = subprocess.run(
-	["g++",
-	"-std=c++17",	"-Wshadow",	"-Wall",	"-o",
-	"correct", "correct.cpp",
-	"-g", "-fsanitize=address",
-	"-fsanitize=undefined",
-	"-D_GLIBCXX_DEBUG"],
-	capture_output = True,
-	text = True)
-if correct_compile.returncode != 0:
-	print(bcolors.FAIL + "Correct solution's compilation failed: \n" + bcolors.ENDC, correct_compile.stderr)
-	exit(1)
-print(bcolors.OKGREEN + "Successfully Compiled correct.cpp" + bcolors.ENDC, flush = True)
-
-#Compile Wrong Solution
-wrong_compile = subprocess.run(
-	["g++",
-	"-std=c++17",	"-Wshadow",	"-Wall",	"-o",
-	"wrong", "wrong.cpp",
-	"-g", "-fsanitize=address",
-	"-fsanitize=undefined",
-	"-D_GLIBCXX_DEBUG"],
-	capture_output = True,
-	text = True)
-if wrong_compile.returncode != 0:
-	print(bcolors.FAIL + "Wrong solution's compilation failed:\n" + bcolors.ENDC, wrong_compile.stderr)
-	exit(1)
-print(bcolors.OKGREEN + "Successfully Compiled wrong.cpp" + bcolors.ENDC, flush = True)
+gen_compile = compile_cpp("generator.cpp", "gen", False)
+check_compile = compile_cpp("checker.cpp", "check", False)
+correct_compile = compile_cpp("correct.cpp", "correct", True)
+wrong_compile = compile_cpp("wrong.cpp", "wrong", True)
 
 
 print("\n\n", flush = True)
@@ -103,7 +74,8 @@ for t in range (1, T + 1):
 		"./wrong",
 		input = gen_execution.stdout.decode(),
 		capture_output = True,
-		text = True)
+		text = True,
+		timeout = time_limit)
 	end_wrong_time = time.time();
 	wrong_time = round(end_wrong_time-start_wrong_time, 3)
 	if wrong_execution.returncode != 0:
