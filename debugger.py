@@ -2,13 +2,14 @@ import subprocess
 import random
 import time
 import os
-os.system('cls' if os.name == 'nt' else 'clear')
+os.system("cls" if os.name == "nt" else "clear")
+os.system("mkdir -p files")
 class bcolors:
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
+    OKBLUE = "\033[94m"
+    OKGREEN = "\033[92m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
 
 def compile_cpp(cpp, binary, safe=False):
 	compilation_process = 1
@@ -98,3 +99,4 @@ for t in range (1, T + 1):
 	
 # #Remove unnecessary files
 remove_files(["correct", "wrong", "gen", "check", "files/input.txt", "files/correct_output.txt", "files/wrong_output.txt"])
+os.system("rmdir files")
