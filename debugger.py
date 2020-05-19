@@ -13,10 +13,10 @@ class bcolors:
 
 def compile_cpp(cpp, binary, safe=False):
 	compilation_process = 1
-	print("Compiling "  + cpp + ":", end=" ", flush=True)
+	print("Compiling "  + cpp + ":", end=" ", flush = True)
 	if safe:
 		compilation_process = subprocess.run(
-			["g++",	"-std=c++17",	"-Wshadow",	"-Wall", "-o",	binary, cpp, "-g", "-fsanitize=address", "-fsanitize=undefined",	"-D_GLIBCXX_DEBUG"],
+			["g++",	"-std=c++17", "-Wshadow", "-Wall", "-o", binary, cpp, "-g", "-fsanitize=address", "-fsanitize=undefined", "-D_GLIBCXX_DEBUG"],
 			capture_output = True,
 			text = True)
 	else:
